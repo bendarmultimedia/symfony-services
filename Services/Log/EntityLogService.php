@@ -2,9 +2,7 @@
 
 namespace App\Service\Log;
 
-use App\Entity\Absence;
 use App\Service\Log\MainLogService;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class EntityLogService
 {

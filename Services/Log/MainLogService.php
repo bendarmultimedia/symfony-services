@@ -7,19 +7,13 @@ use App\Entity\User;
 use App\Repository\LogRepository;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\OnFlushEventArgs;
-use Doctrine\ORM\Event\PostFlushEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Exception;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
-use Symfony\Bridge\Doctrine\ContainerAwareEventManager;
-use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -41,10 +35,6 @@ class MainLogService
         'OTHER'
     ];
 
-    public const ENTITIES_FOR_CUSTOM_UPDATE_LOG = [
-        'Absence'
-    ];
-
     public function __construct(
         EntityManagerInterface $entityManager,
         Security $security,
@@ -64,16 +54,11 @@ class MainLogService
 
     public function itemToArray($item)
     {
-        if ($this->getItemClassName($item) == 'AbsenceUserSettings') {
-            // dump($this->serializeItem($item));
-        }
-
-        return json_decode(json_encode($item, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES, 3));
+        return json_decode($this->serializeItem($item));
     }
 
     public function serializeItem($item, ?array $groups = ['groups' => ['normal']]): string
     {
-        //todo: infinity loop anyway
         $encoder = new JsonEncoder();
         $defaultContext = [
             ['ignored_attributes' => ['user', 'importedFiles']],
@@ -157,11 +142,6 @@ class MainLogService
                 $this->getItemClassName($item)
             );
 
-            // $uow = $this->em->getUnitOfWork();
-            // $metaData = $this->em->getClassMetadata('App\\Entity\\Log');
-
-            // $uow->persist($log);
-            // $uow->computeChangeSet($metaData, $log);
             $this->em->persist($log);
             if ($flush) {
                 $this->em->flush();

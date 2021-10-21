@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use ReflectionClass;
-use ReflectionProperty;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Throwable;
 

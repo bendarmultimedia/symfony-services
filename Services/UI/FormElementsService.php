@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\UI;
 
-use DateTime;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
-use Twig\Extension\EscaperExtension;
 
 class FormElementsService
 {
@@ -17,23 +14,18 @@ class FormElementsService
     ) {
         $this->twig = $twig;
         $this->templates = [
-            'select'   =>  '/skeleton/Partials/Forms/Controls/select.form.html.twig',
-            'input'    =>  'skeleton/Partials/Forms/Controls/input.html.twig',
-            'textarea'    =>  'skeleton/Partials/Forms/Controls/textarea.html.twig',
-            'button'    =>  'skeleton/Partials/Forms/Controls/button.html.twig',
-            'alert'    =>  'skeleton/Partials/Forms/Controls/alert.html.twig',
-            'checkbox'    =>  'skeleton/Partials/Forms/Controls/checkbox.html.twig',
-            'radios'    =>  'skeleton/Partials/Forms/Controls/radios.html.twig',
+            'select'      =>  'UI/Forms/select.form.html.twig',
+            'input'       =>  'UI/Forms/input.html.twig',
+            'textarea'    =>  'UI/Forms/textarea.html.twig',
+            'button'      =>  'UI/Forms/button.html.twig',
+            'alert'       =>  'UI/Forms/alert.html.twig',
+            'checkbox'    =>  'UI/Forms/checkbox.html.twig',
+            'radios'      =>  'UI/Forms/radios.html.twig',
         ];
-        // $this->twig->getExtension(EscaperExtension::class)->setDefaultStrategy('all');
-        // $test = $this->twig->getExtension(EscaperExtension::class)->getDefaultStrategy($this->templates['select']);
-        // $escaper->addSafeClass('Foo', ['all']);
-        // dd($test);
     }
 
     public function createSelect(array $params = [], array $options = null, $render = true)
     {
-        //for bootstrap-select add selectpicker to classNames
         $default = [
            'id' => 'newSelect',
            'name' => 'newSelect',
@@ -58,7 +50,6 @@ class FormElementsService
 
     public function createRadios(array $params = [], array $options = null, $render = true)
     {
-        //for bootstrap-select add selectpicker to classNames
         $default = [
            'id' => 'newRadios',
            'name' => 'newRadios',
@@ -161,27 +152,6 @@ class FormElementsService
         ];
         $alert = changeArrayByArray($default, $params);
         return $this->returnFormElement('alert', $alert, $render);
-    }
-
-    public function createDatePicker(DateTime $date, array $params = [], ?string $format = 'd.m.Y', $render = true)
-    {
-        $default = [
-           'id' => 'dateInput',
-           'name' => 'dateInput',
-           'containerClassNames' => 'form-group',
-           'container' => true,
-           'classNames' => 'rounded form-control date-input',
-           'labelClassNames' => 'form-label',
-           'label' => 'Data',
-           'labelAfter' => false,
-           'type' => 'text',
-           'disableLabel'   => false,
-           'value'  => $date->format($format),
-           'attributes' => [],
-        ];
-
-        $input = changeArrayByArray($default, $params);
-        return $this->returnFormElement('input', $input, $render);
     }
 
     /*

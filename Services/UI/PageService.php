@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\UI;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Entity\ImportedFiles;
 use App\Repository\AbsenceKindRepository;
 use App\Repository\ImportedFilesRepository;
@@ -27,10 +26,8 @@ class PageService
         UrlGeneratorInterface $urlGrenerator
     ) {
         $this->currentRoute = $requestStack->getCurrentRequest()->get('_route');
-        // $referer = $requestStack->geteaders->get('referer');
         $referer = $requestStack->getCurrentRequest()->headers->get('referer');
         $this->refererUrl = (strlen($referer) > 0) ? Request::create($referer)->getPathInfo() : '';
-        // dump($requestStack->getCurrentRequest());
         $this->addReferer = false;
         $this->urlGrenerator = $urlGrenerator;
     }
@@ -59,10 +56,9 @@ class PageService
             }
         }
     }
+    // todo: make it better
     public function setReturnPath(array $returnPath)
     {
-
-
         $this->returnPath['pathName'] = (isset($returnPath[0]))
             ? $returnPath[0]
             : '';
@@ -83,6 +79,7 @@ class PageService
             $this->returnPath['url'] = $this->urlGrenerator->generate($this->returnPath['pathName']);
         }
     }
+
     public function setTemplate($templateFileName = null)
     {
         $this->template = ($templateFileName)
